@@ -1,4 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
+import './UploadPanel.css';
 
 interface UploadPanelProps {
   onFileSelected: (file: File) => void;
@@ -74,20 +75,13 @@ export const UploadPanel: React.FC<UploadPanelProps> = ({
       onDrop={handleDrop}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
-      style={{
-        border: '2px dashed #ccc',
-        borderRadius: 8,
-        padding: '24px',
-        textAlign: 'center',
-        cursor: disabled ? 'not-allowed' : 'pointer',
-        backgroundColor: isDragging ? '#f5f5f5' : '#fafafa',
-        color: disabled ? '#999' : '#333',
-        outline: 'none',
-      }}
+      className={`upload-panel ${isDragging ? 'dragging' : ''} ${disabled ? 'disabled' : ''}`}
       aria-disabled={disabled}
     >
-      <p style={{ margin: '0 0 8px' }}>上传前端项目 zip 文件</p>
-      <p style={{ margin: 0, fontSize: 14, color: '#666' }}>{statusText}</p>
+      <div className="upload-icon">📦</div>
+      <p className="upload-title">上传前端项目 ZIP 文件</p>
+      <p className="upload-subtitle">{statusText}</p>
+      <div className="upload-hint">或按 Enter 键选择文件</div>
       <input
         ref={inputRef}
         type="file"

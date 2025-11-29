@@ -1,73 +1,187 @@
-# React + TypeScript + Vite
+# 📊 前端项目依赖分析工具
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+一个强大的前端项目依赖关系分析工具，帮助你快速识别和解决循环依赖问题。
 
-Currently, two official plugins are available:
+## ✨ 功能特性
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🎯 **快速分析** - 秒级分析项目依赖关系
+- 🔍 **循环检测** - 自动识别所有循环依赖
+- 📊 **可视化展示** - 交互式依赖图展示
+- 📈 **深度分析** - 详细的统计和分析数据
+- 🎨 **现代化界面** - 美观易用的用户界面
+- 📱 **响应式设计** - 完美适配各种设备
 
-## React Compiler
+## 🚀 快速开始
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 环境要求
 
-## Expanding the ESLint configuration
+- Node.js >= 20.12.0
+- npm >= 10.5.0
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 安装依赖
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 开发模式
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+访问 `http://localhost:5173` 查看应用。
+
+### 生产构建
+
+```bash
+npm run build
+```
+
+### 预览构建结果
+
+```bash
+npm run preview
+```
+
+## 📖 使用指南
+
+### 1. 上传项目
+
+在首页上传你的前端项目 ZIP 文件（支持 React、Vue、Angular 等）。
+
+### 2. 查看分析结果
+
+上传完成后，应用会自动分析项目依赖关系，显示：
+- 项目文件数量
+- 依赖关系数量
+- 循环依赖数量
+
+### 3. 浏览依赖图
+
+在"依赖图"页面查看交互式的依赖关系图：
+- 拖拽移动节点
+- 滚轮缩放
+- 点击节点查看详情
+- 切换"仅循环"/"全部"视图
+
+### 4. 分析循环依赖
+
+在"循环依赖"页面查看详细的循环依赖信息：
+- 搜索和过滤循环
+- 查看循环路径
+- 获取解决建议
+- 查看统计信息
+
+### 5. 查看统计数据
+
+在"统计分析"页面查看项目的深度分析：
+- 项目概览统计
+- 最多依赖的文件排名
+- 被依赖最多的文件排名
+- 代码健康度评分
+
+## 🏗️ 项目结构
+
+```
+dep-inspector/
+├── src/
+│   ├── components/          # React 组件
+│   │   ├── Navigation.tsx    # 导航栏
+│   │   ├── HomePage.tsx      # 首页
+│   │   ├── DependencyGraph.tsx # 依赖图
+│   │   ├── CyclesPage.tsx    # 循环依赖页
+│   │   ├── StatsPage.tsx     # 统计分析页
+│   │   └── UploadPanel.tsx   # 上传面板
+│   ├── core/                # 核心逻辑
+│   │   ├── analyzeProject.ts # 项目分析
+│   │   ├── dependencyParser.ts # 依赖解析
+│   │   ├── cycleDetector.ts  # 循环检测
+│   │   ├── fileLoader.ts     # 文件加载
+│   │   └── graphTypes.ts     # 类型定义
+│   ├── App.tsx              # 主应用
+│   ├── main.tsx             # 入口文件
+│   └── index.css            # 全局样式
+├── public/                  # 静态资源
+├── index.html               # HTML 模板
+├── package.json             # 项目配置
+└── vite.config.ts           # Vite 配置
+```
+
+## 🛠️ 技术栈
+
+- **框架**: React 19
+- **语言**: TypeScript
+- **构建工具**: Vite
+- **可视化**: vis-network
+- **样式**: CSS3
+- **文件处理**: jszip
+
+## 📦 主要依赖
+
+```json
+{
+  "react": "^19.2.0",
+  "react-dom": "^19.2.0",
+  "vis-network": "^9.1.2",
+  "jszip": "^3.10.1",
+  "path-browserify": "^1.0.1"
+}
+```
+
+## 🎯 核心功能说明
+
+### 依赖分析
+
+应用通过以下步骤分析项目依赖：
+
+1. **文件加载** - 从 ZIP 文件中提取所有源代码文件
+2. **依赖解析** - 解析每个文件的 import/require 语句
+3. **图构建** - 构建依赖关系图
+4. **循环检测** - 使用 DFS 算法检测所有循环依赖
+
+### 循环依赖检测
+
+使用深度优先搜索（DFS）算法检测循环依赖：
+- 时间复杂度: O(V + E)
+- 支持检测所有类型的循环
+- 提供完整的循环路径信息
+
+### 可视化展示
+
+使用 vis-network 库提供：
+- 物理模拟布局
+- 交互式节点操作
+- 实时图表更新
+- 性能优化
+
+## 💡 使用建议
+
+1. **定期分析** - 定期运行分析工具检查项目依赖
+2. **及时修复** - 发现循环依赖后及时修复
+3. **代码审查** - 在代码审查中关注新增的循环依赖
+4. **架构优化** - 根据分析结果优化项目架构
+
+## 🔧 解决循环依赖的方法
+
+1. **提取公共模块** - 将共同依赖的代码提取到独立模块
+2. **重新组织结构** - 调整文件和文件夹的组织方式
+3. **使用依赖注入** - 通过依赖注入解耦模块
+4. **事件系统** - 使用事件系统替代直接依赖
+5. **延迟加载** - 使用动态导入延迟加载模块
+
+## 📝 许可证
+
+MIT
+
+## 🤝 贡献
+
+欢迎提交 Issue 和 Pull Request！
+
+## 📧 联系方式
+
+如有问题或建议，欢迎联系我们。
+
+---
+
+**祝你使用愉快！** 🎉

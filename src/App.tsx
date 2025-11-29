@@ -1,33 +1,18 @@
 import { useCallback, useState } from 'react';
 import './App.css';
-import { UploadPanel } from './components/UploadPanel';
+import { Navigation, type PageType } from './components/Navigation';
+import { HomePage } from './components/HomePage';
+import { DependencyGraph as DependencyGraphComponent } from './components/DependencyGraph';
+import { CyclesPage } from './components/CyclesPage';
+import { StatsPage } from './components/StatsPage';
 import { analyzeProjectZip } from './core/analyzeProject';
-import type { DependencyGraph, CycleResult } from './core/graphTypes';
-
-interface CycleListProps {
-  cycles: CycleResult[];
-}
-
-const CycleList: React.FC<CycleListProps> = ({ cycles }) => {
-  if (!cycles.length) {
-    return <p style={{ marginTop: 8 }}>暂无循环依赖</p>;
-  }
-
-  return (
-    <ul style={{ paddingLeft: 16, marginTop: 8 }}>
-      {cycles.map((cycle) => (
-        <li key={cycle.id} style={{ marginBottom: 8 }}>
-          <strong>#{cycle.id}:</strong> {cycle.readablePath}
-        </li>
-      ))}
-    </ul>
-  );
-};
+import type { DependencyGraph as DependencyGraphType, CycleResult } from './core/graphTypes';
 
 function App() {
+  const [currentPage, setCurrentPage] = useState<PageType>('home');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [graph, setGraph] = useState<DependencyGraph | null>(null);
+  const [graph, setGraph] = useState<DependencyGraphType | null>(null);
   const [cycles, setCycles] = useState<CycleResult[]>([]);
 
   const handleFileSelected = useCallback(async (file: File) => {
@@ -47,43 +32,76 @@ function App() {
     }
   }, []);
 
-  const nodeCount = graph?.nodes.length ?? 0;
-  const edgeCount = graph?.edges.length ?? 0;
+  const handlePageChange = (page: PageType) => {
+    setCurrentPage(page);
+  };
+
+  const handleNavigateFromHome = (page: 'graph' | 'cycles' | 'stats') => {
+    setCurrentPage(page);
+  };
+
   const cycleCount = cycles.length;
 
   return (
-    <div style={{ maxWidth: 960, margin: '0 auto', padding: 24 }}>
-      <h1 style={{ marginBottom: 16 }}>前端项目依赖分析</h1>
+    <div className="app">
+      <Navigation
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+        hasData={graph !== null}
+        cycleCount={cycleCount}
+      />
 
-      <UploadPanel onFileSelected={handleFileSelected} disabled={loading} />
-
-      <div style={{ marginTop: 24 }}>
-        {loading && <p>正在分析，请稍候...</p>}
-        {error && (
-          <p style={{ color: 'red' }}>
-            分析失败：{error}
-          </p>
-        )}
-        {!loading && !error && graph && (
-          <div
-            style={{
-              border: '1px solid #eee',
-              borderRadius: 8,
-              padding: 16,
-              marginTop: 8,
-            }}
-          >
-            <p>节点数量: {nodeCount}</p>
-            <p>依赖边数量: {edgeCount}</p>
-            <p>循环依赖数量: {cycleCount}</p>
+      <main className="main-content">
+        {loading && (
+          <div className="loading-overlay">
+            <div className="loading-state">
+              <div className="spinner"></div>
+              <p className="loading-text">正在分析项目，请稍候...</p>
+            </div>
           </div>
         )}
-      </div>
 
-      <div style={{ marginTop: 24 }}>
-        <h2 style={{ marginBottom: 8 }}>循环依赖</h2>
-        <CycleList cycles={cycles} />
-      </div>
+        {error && (
+          <div className="error-banner">
+            <span className="error-icon">⚠️</span>
+            <p className="error-message">{error}</p>
+            <button
+              className="error-close"
+              onClick={() => setError(null)}
+            >
+              ✕
+            </button>
+          </div>
+        )}
+
+        {currentPage === 'home' && (
+          <HomePage
+            onFileSelected={handleFileSelected}
+            loading={loading}
+            graph={graph}
+            cycles={cycles}
+            onNavigate={handleNavigateFromHome}
+          />
+        )}
+
+        {currentPage === 'graph' && graph && (
+          <div className="page-wrapper">
+            <DependencyGraphComponent graph={graph} cycles={cycles} />
+          </div>
+        )}
+
+        {currentPage === 'cycles' && graph && (
+          <div className="page-wrapper">
+            <CyclesPage cycles={cycles} />
+          </div>
+        )}
+
+        {currentPage === 'stats' && graph && (
+          <div className="page-wrapper">
+            <StatsPage graph={graph} cycles={cycles} />
+          </div>
+        )}
+      </main>
     </div>
   );
 }

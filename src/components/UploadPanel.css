@@ -1,0 +1,111 @@
+.upload-panel {
+  border: 2px dashed #667eea;
+  border-radius: 12px;
+  padding: 3rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+  color: #333;
+  outline: none;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.upload-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.upload-panel:hover {
+  border-color: #764ba2;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+  transform: translateY(-2px);
+}
+
+.upload-panel.dragging {
+  border-color: #764ba2;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+  transform: scale(1.02);
+}
+
+.upload-panel.dragging::before {
+  opacity: 1;
+}
+
+.upload-panel.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  border-color: #ccc;
+}
+
+.upload-panel.disabled:hover {
+  transform: none;
+  box-shadow: none;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+}
+
+.upload-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: inline-block;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.upload-title {
+  font-size: 1.2em;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 0.5rem 0;
+}
+
+.upload-subtitle {
+  font-size: 0.95em;
+  color: #666;
+  margin: 0 0 1rem 0;
+  word-break: break-all;
+}
+
+.upload-hint {
+  font-size: 0.85em;
+  color: #999;
+  margin: 0;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .upload-panel {
+    padding: 2rem 1.5rem;
+  }
+
+  .upload-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .upload-title {
+    font-size: 1.1em;
+  }
+
+  .upload-subtitle {
+    font-size: 0.9em;
+  }
+}
